@@ -1,4 +1,4 @@
-import path from 'path';
+/*import path from 'path';
 import { parseXML } from '../src/parsers/xmlparser';
 
 describe('XML Parser', () => {
@@ -20,4 +20,32 @@ describe('XML Parser', () => {
     const badPath = path.join(__dirname, '../src/data/malformed.xml');
     await expect(parseXML(badPath)).rejects.toThrow();
   });
+});*/
+import fs from 'fs';
+import path from 'path';
+import { parseXML } from '../src/parsers/xmlparser';
+
+describe('XML Parser', () => {
+  const dataDir = path.join(__dirname, '..', 'data');
+
+  it('should parse valid toy orders XML file', async () => {
+    const filePath = path.join(dataDir, 'toy orders.xml');
+    const xmlContent = fs.readFileSync(filePath, 'utf-8');
+
+    const result = await parseXML(xmlContent);
+
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBeGreaterThan(-1);
+  });
+
+  it('should handle empty XML files', async () => {
+    const result = await parseXML('');
+    expect(result).toEqual([]);
+  });
+
+  it('should throw an error for malformed XML', async () => {
+    const malformed = `<orders><order><id>1</id></order`;
+    await expect(parseXML(malformed)).rejects.toThrow(/Error parsing XML/);
+  });
 });
+

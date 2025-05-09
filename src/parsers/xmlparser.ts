@@ -1,12 +1,20 @@
-import fs from 'fs/promises';
-import { getSystemErrorMessage } from 'util';
+
 import { parseStringPromise } from 'xml2js';
 
-export async function parseXML(filePath: string): Promise<any> {
+export async function parseXML(xmlData: string): Promise<any[]> {
+  if (!xmlData.trim()) return []; // Handle empty input safely
+
   try {
-    const xmlData = await fs.readFile(filePath, 'utf-8');
-    const result = await parseStringPromise(xmlData, { explicitArray: false });
-    return result;
+    const parsed = await parseStringPromise(xmlData, {
+      explicitArray: false,
+    });
+
+    // Navigate to toy orders
+    const orders = parsed?.orders?.order;
+
+    if (!orders) return [];
+
+    return Array.isArray(orders) ? orders : [orders];
   } catch (error: any) {
     throw new Error(`Error parsing XML: ${error.message}`);
   }
