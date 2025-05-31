@@ -9,8 +9,8 @@ export class ToyXmlMapper implements IMapper<any, Toy> {
       .setAgeGroup(data.ageGroup)
       .setBrand(data.brand)
       .setMaterial(data.material)
-      .setBatteryRequired(data.batteryRequired === true)
-      .setEducational(data.educational === true)
+      .setBatteryRequired(data.batteryRequired)
+      .setEducational(data.educational)
       .build();
   }
 }
